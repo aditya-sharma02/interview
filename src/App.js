@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, deleteTodo } from "./store/slice/todoslice";
+
 
 function App() {
+  const dispatch = useDispatch()
+  const data = useSelector((state) => state.todo)
+  const [state, setstate] = useState("")
+  const handlechange = (e) => {
+    setstate(e.target.value);
+  }
+  const submit = (e) => {
+    e.preventDefault()
+    // console.log(state)
+    dispatch(addTodo(state))
+    setstate("")
+  }
+  const deleteelem = (id) => {
+    dispatch(deleteTodo(id))
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      
+      <form>
+        <input onChange={handlechange} value={state} type="text" placeholder="data" required />
+        <button onClick={submit}>submit</button>
+      </form>
+
+
+      {
+        data.map((elem, id) => {
+          return (
+            <div key={id}>
+              <span onClick={()=>deleteelem(elem.time)}> {elem.data} </span> 
+            </div>
+          )
+        })
+      }
+    </>
   );
 }
 
